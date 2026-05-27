@@ -1,0 +1,11 @@
+node_modules/
+npm-debug.log*
+*.log
+
+# Runtime data
+data/submissions.json
+
+# Local environment files
+.env
+.DS_Store
+Thumbs.db

@@ -1,0 +1,14 @@
+{
+  "name": "she-can-foundation",
+  "version": "1.0.0",
+  "description": "She Can Foundation Website & Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^4.22.2"
+  }
+}
