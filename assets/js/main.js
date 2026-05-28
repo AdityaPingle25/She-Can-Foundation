@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// AI Chatbot Logic
+// AI Chatbot Logic — Fully Client-Side
 document.addEventListener('DOMContentLoaded', () => {
   const toggleBtn = document.getElementById('chatbotToggle');
   const widget = document.getElementById('chatbotWidget');
@@ -402,49 +402,171 @@ document.addEventListener('DOMContentLoaded', () => {
   const chatInput = document.getElementById('chatInput');
   const chatMessages = document.getElementById('chatMessages');
 
-  if(toggleBtn && widget) {
-    toggleBtn.addEventListener('click', () => widget.classList.add('open'));
-    closeBtn.addEventListener('click', () => widget.classList.remove('open'));
+  if(!toggleBtn || !widget || !chatForm || !chatInput || !chatMessages) return;
 
-    chatForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const text = chatInput.value.trim();
-      if(!text) return;
+  toggleBtn.addEventListener('click', () => widget.classList.add('open'));
+  closeBtn.addEventListener('click', () => widget.classList.remove('open'));
 
-      // Add user message
-      chatMessages.innerHTML += `<div class="chat-msg user-msg"><div class="msg-bubble">${text}</div></div>`;
-      chatInput.value = '';
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+  // Comprehensive knowledge base
+  const knowledgeBase = [
+    {
+      keywords: ['hello', 'hi', 'hey', 'good morning', 'good evening', 'namaste', 'hola'],
+      reply: "Hello! 👋 I'm the She Can AI Assistant. I can help you learn about our foundation, how to donate, volunteer, or anything else. What would you like to know?"
+    },
+    {
+      keywords: ['donate', 'donation', 'money', 'contribute', 'fund', 'pay', 'give', 'support financially'],
+      reply: "Every contribution counts! 💖 100% of your donation goes directly towards ground operations. You can donate securely via our <a href='donate.html' style='color:var(--rose); text-decoration:underline;'>Donate page</a>.<br><br>💡 <b>Impact examples:</b><br>• ₹500 = 5 girls receive pads for 1 month<br>• ₹1,500 = 15 girls receive pads for 3 months<br>• ₹5,000 = 25 girls continue school with dignity<br>• ₹10,000 = An entire classroom is free from shame<br><br>You can donate via UPI, bank transfer, or Razorpay."
+    },
+    {
+      keywords: ['volunteer', 'join', 'help', 'work with', 'participate', 'intern', 'internship'],
+      reply: "We're thrilled you want to join us! 🌟 You can volunteer by clicking the <b>'Volunteer With Us'</b> button on our homepage and filling out the quick form. We welcome help in education, health outreach, social media, content creation, event management, and more!"
+    },
+    {
+      keywords: ['location', 'located', 'where', 'address', 'office', 'city', 'delhi', 'based'],
+      reply: "🏢 Our registered office is in <b>Rohini Sector-7, New Delhi</b>. We operate across <b>250+ villages</b> in India, reaching underserved communities with menstrual hygiene, education, and healthcare programs."
+    },
+    {
+      keywords: ['certificate', 'registered', 'registration', 'legal', 'legitimate', 'ngo status', 'society act'],
+      reply: "✅ She Can Foundation is a <b>Government Registered NGO</b> under the <b>Indian Society Act, 1860</b>. You can view our official registration certificate on the <a href='certificate.html' style='color:var(--rose); text-decoration:underline;'>Our Certificate</a> page. We believe in full transparency!"
+    },
+    {
+      keywords: ['mission', 'goal', 'purpose', 'aim', 'objective', 'what do you do'],
+      reply: "🎯 Our mission is to <b>empower underprivileged women across India</b> by providing access to education, healthcare, and economic opportunities. We strive to create a world where every woman is equipped with the tools and confidence she needs to reach her full potential."
+    },
+    {
+      keywords: ['vision', 'future', 'dream', 'aspire'],
+      reply: "🌈 Our vision is a world where every woman has <b>equal access to education, healthcare, and economic opportunities</b>. We believe empowering women is not just a matter of justice, but a critical component in building a better, more equitable society."
+    },
+    {
+      keywords: ['founder', 'reeta', 'president', 'who started', 'who founded'],
+      reply: "👩‍💼 She Can Foundation was founded by <b>Reeta Mishra</b>, who serves as the Founder & President. Her vision: <i>\"Together, we can break down barriers and empower women. At She Can Foundation, we believe that if we all do our part, there is no challenge too great to overcome.\"</i>"
+    },
+    {
+      keywords: ['contact', 'email', 'phone', 'call', 'reach', 'number', 'reach out'],
+      reply: "📧 <b>Email:</b> president@shecanfoundation.org<br>📞 <b>Phone:</b> +91 8283841830<br>📸 <b>Instagram:</b> <a href='https://www.instagram.com/shecanfoundation.ngo/' target='_blank' style='color:var(--rose);'>@shecanfoundation.ngo</a><br>💼 <b>LinkedIn:</b> <a href='https://www.linkedin.com/company/shecanfoundation' target='_blank' style='color:var(--rose);'>She Can Foundation</a>"
+    },
+    {
+      keywords: ['period', 'menstrual', 'pad', 'sanitary', 'hygiene', 'menstruation'],
+      reply: "🩸 Menstrual hygiene is at the heart of our work. <b>1 in 5 girls in India drops out of school</b> because of periods. We've already helped <b>1,20,000+ girls</b> with free sanitary pads, awareness workshops, and dignity kits. Your support can help us reach millions more."
+    },
+    {
+      keywords: ['impact', 'numbers', 'stats', 'achieve', 'how many', 'helped', 'result', 'success'],
+      reply: "📊 <b>Our Impact So Far:</b><br>• 🌸 1,20,000+ girls provided with sanitary pads<br>• 📚 250+ villages reached across India<br>• 👩‍🎓 Thousands of awareness workshops conducted<br>• 💼 Women empowerment through skill training programs<br><br>But for every girl we reach, 5 more are still waiting. Help us bridge the gap!"
+    },
+    {
+      keywords: ['bank', 'account', 'transfer', 'ifsc', 'upi', 'kotak'],
+      reply: "🏦 <b>Bank Transfer Details:</b><br>• Bank: KOTAK MAHINDRA BANK<br>• Account Name: SHE CAN FOUNDATION<br>• Account Number: 4513416814<br>• IFSC Code: KKBK0000720<br>• Branch: ROHINI SECTOR-7<br><br>You can also pay via UPI or scan the QR code on our <a href='donate.html' style='color:var(--rose); text-decoration:underline;'>Donate page</a>."
+    },
+    {
+      keywords: ['story', 'about', 'history', 'background', 'who are you', 'what is she can'],
+      reply: "📖 <b>She Can Foundation</b> is a Government Registered NGO committed to creating positive change and empowering women across India. Our core values are <b>compassion, equality, and integrity</b>. Learn more on our <a href='our-story.html' style='color:var(--rose); text-decoration:underline;'>Our Story</a> page."
+    },
+    {
+      keywords: ['event', 'workshop', 'camp', 'drive', 'activity', 'program', 'campaign'],
+      reply: "📅 We regularly conduct <b>menstrual hygiene workshops, education camps, health drives, and women empowerment campaigns</b> across India. Follow us on <a href='https://www.instagram.com/shecanfoundation.ngo/' target='_blank' style='color:var(--rose);'>Instagram</a> to stay updated on upcoming events!"
+    },
+    {
+      keywords: ['gallery', 'photo', 'picture', 'image'],
+      reply: "📸 Check out our <a href='gallery.html' style='color:var(--rose); text-decoration:underline;'>Photo Gallery</a> to see our work in action — from distribution drives to awareness workshops across India!"
+    },
+    {
+      keywords: ['value', 'principle', 'believe', 'stand for'],
+      reply: "💎 Our core values:<br>• <b>Compassion</b> — We care deeply for every woman we serve<br>• <b>Equality</b> — Every woman deserves equal opportunities<br>• <b>Integrity</b> — Transparency and accountability in everything we do<br>• <b>Community</b> — Local insights drive transformative change"
+    },
+    {
+      keywords: ['thank', 'thanks', 'great', 'awesome', 'wonderful', 'nice', 'good job', 'amazing'],
+      reply: "Thank you so much for your kind words! 💖 Your support means the world to us. Together, we can make a difference in the lives of women across India! 🌟"
+    },
+    {
+      keywords: ['bye', 'goodbye', 'see you', 'take care', 'gotta go'],
+      reply: "Goodbye! 👋 Thank you for chatting with us. Remember, every small act of kindness creates a ripple of change. Have a wonderful day! 🌸"
+    },
+    {
+      keywords: ['razorpay', 'online', 'payment', 'link'],
+      reply: "💳 You can donate securely online via Razorpay: <a href='https://rzp.io/rzp/shecanfoundation' target='_blank' style='color:var(--rose); text-decoration:underline;'>Click here to donate</a>. It's quick, safe, and supports our mission directly!"
+    },
+    {
+      keywords: ['social', 'media', 'instagram', 'linkedin', 'follow'],
+      reply: "📱 Follow us and spread the word!<br>• 📸 <a href='https://www.instagram.com/shecanfoundation.ngo/' target='_blank' style='color:var(--rose);'>Instagram</a><br>• 💼 <a href='https://www.linkedin.com/company/shecanfoundation' target='_blank' style='color:var(--rose);'>LinkedIn</a><br><br>Sharing our work helps us reach more women in need! 🌸"
+    },
+    {
+      keywords: ['education', 'school', 'learn', 'study', 'teach', 'dropout'],
+      reply: "📚 Education is a key pillar of our work. Many girls drop out due to lack of menstrual hygiene access. We provide <b>sanitary kits, awareness sessions, and educational support</b> so no girl has to choose between her period and her education."
+    },
+    {
+      keywords: ['health', 'healthcare', 'medical', 'disease', 'sick'],
+      reply: "🏥 We conduct healthcare awareness drives, focusing on <b>women's health, menstrual hygiene, and disease prevention</b>. Using unsafe menstrual practices leads to serious infections — our programs educate and provide safe alternatives."
+    },
+    {
+      keywords: ['women empowerment', 'empower', 'skill', 'training', 'economic'],
+      reply: "💪 Women empowerment is at our core! We provide <b>skill training, economic opportunities, and confidence-building programs</b> to help women become self-sufficient and lead fulfilling lives."
+    }
+  ];
 
-      // Add typing indicator
-      const typingId = 'typing-' + Date.now();
-      chatMessages.innerHTML += `<div id="${typingId}" class="chat-msg bot-msg"><span class="msg-avatar">✨</span><div class="msg-bubble">...</div></div>`;
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+  function getReply(userText) {
+    const lower = userText.toLowerCase().trim();
 
-      try {
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: text })
-        });
-        if (!response.ok) throw new Error("API Offline");
-        const data = await response.json();
-        document.getElementById(typingId).remove();
-        chatMessages.innerHTML += `<div class="chat-msg bot-msg"><span class="msg-avatar">✨</span><div class="msg-bubble">${data.reply}</div></div>`;
-      } catch(err) {
-        document.getElementById(typingId).remove();
-        let fallback = "Thank you for reaching out to She Can Foundation! How else can I assist you today?";
-        const lower = text.toLowerCase();
-        if (lower.includes('donate') || lower.includes('money')) {
-          fallback = "Every contribution counts! 100% of your donation goes directly towards our ground operations. You can donate securely via our Donate page.";
-        } else if (lower.includes('volunteer') || lower.includes('join')) {
-          fallback = "We're thrilled you want to join us! Please click the 'Volunteer With Us' button on our homepage.";
+    // Try to find best match
+    let bestMatch = null;
+    let bestScore = 0;
+
+    for (const entry of knowledgeBase) {
+      let score = 0;
+      for (const kw of entry.keywords) {
+        if (lower.includes(kw)) {
+          score += kw.length; // longer keyword = more specific match
         }
-        chatMessages.innerHTML += `<div class="chat-msg bot-msg"><span class="msg-avatar">✨</span><div class="msg-bubble">${fallback}</div></div>`;
       }
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    });
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = entry;
+      }
+    }
+
+    if (bestMatch && bestScore > 0) {
+      return bestMatch.reply;
+    }
+
+    // Default fallback
+    return "Thank you for reaching out! 💖 I can help with information about <b>donations, volunteering, our mission, contact info, events, certificates</b>, and more. Try asking something like <i>\"How can I donate?\"</i> or <i>\"Tell me about your mission.\"</i>";
   }
+
+  function addMessage(html, isUser) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `chat-msg ${isUser ? 'user-msg' : 'bot-msg'}`;
+    if (!isUser) {
+      msgDiv.innerHTML = `<span class="msg-avatar">✨</span><div class="msg-bubble">${html}</div>`;
+    } else {
+      msgDiv.innerHTML = `<div class="msg-bubble">${html}</div>`;
+    }
+    chatMessages.appendChild(msgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = chatInput.value.trim();
+    if(!text) return;
+
+    // Add user message
+    addMessage(text, true);
+    chatInput.value = '';
+
+    // Add typing indicator
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'chat-msg bot-msg';
+    typingDiv.innerHTML = `<span class="msg-avatar">✨</span><div class="msg-bubble"><span class="typing-dots"><span>.</span><span>.</span><span>.</span></span></div>`;
+    chatMessages.appendChild(typingDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Simulate typing delay then respond
+    const delay = 600 + Math.random() * 800;
+    setTimeout(() => {
+      typingDiv.remove();
+      const reply = getReply(text);
+      addMessage(reply, false);
+    }, delay);
+  });
 });
 
 // Gallery Lightbox Logic

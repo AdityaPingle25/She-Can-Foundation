@@ -2766,6 +2766,30 @@ em {
 [data-theme="dark"] .quick-reply-btn { background: #2A2A2A; color: var(--rose-light); border-color: rgba(255,255,255,0.1); }
 [data-theme="dark"] .chatbot-input input { background: #2A2A2A !important; color: #E0E0E0 !important; }
 
+/* Typing dots animation */
+.typing-dots {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+.typing-dots span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--rose);
+  border-radius: 50%;
+  animation: typingBounce 1.4s infinite ease-in-out both;
+  font-size: 0;
+  line-height: 0;
+}
+.typing-dots span:nth-child(1) { animation-delay: 0s; }
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce {
+  0%, 80%, 100% { transform: scale(0.5); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
 
 /* ---------- Logo Preloader CSS ---------- */
 .preloader__logo-wrap {
